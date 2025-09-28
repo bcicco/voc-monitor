@@ -1,0 +1,18 @@
+{
+  "device_id": "voc-esp32-01",
+  "breath_id": "sample-001",
+  "started_at": "2025-09-28T06:15:23Z",
+  "sample_rate_hz": 25,
+  "samples": [
+    { "t_ms": 0, "voc1_ppb": 105, "voc2_ppb": 97, "temp_c": 24.8, "rh_pct": 53.2 },
+    { "t_ms": 40, "voc1_ppb": 112, "voc2_ppb": 101, "temp_c": 24.8, "rh_pct": 53.2 },
+    { "t_ms": 80, "voc1_ppb": 125, "voc2_ppb": 110, "temp_c": 24.9, "rh_pct": 53.3 },
+    { "t_ms": 120, "voc1_ppb": 142, "voc2_ppb": 123, "temp_c": 24.9, "rh_pct": 53.3 },
+    { "t_ms": 160, "voc1_ppb": 160, "voc2_ppb": 139, "temp_c": 25.0, "rh_pct": 53.4 },
+    { "t_ms": 200, "voc1_ppb": 178, "voc2_ppb": 155, "temp_c": 25.0, "rh_pct": 53.4 },
+    { "t_ms": 240, "voc1_ppb": 165, "voc2_ppb": 149, "temp_c": 25.0, "rh_pct": 53.5 },
+    { "t_ms": 280, "voc1_ppb": 140, "voc2_ppb": 128, "temp_c": 25.1, "rh_pct": 53.5 },
+    { "t_ms": 320, "voc1_ppb": 120, "voc2_ppb": 109, "temp_c": 25.1, "rh_pct": 53.6 },
+    { "t_ms": 360, "voc1_ppb": 105, "voc2_ppb": 95, "temp_c": 25.1, "rh_pct": 53.6 }
+  ]
+}
