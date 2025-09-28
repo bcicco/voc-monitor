@@ -1,0 +1,42 @@
+# Node / Vite
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Python / Azure Functions
+api/.python_packages/
+api/.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+.env
+local.settings.json   # local Azure Functions config, keep secrets local
+
+# Build / Deploy
+.swa/
+.swa-build/
+.swa-deploy/
+*.zip
+
+# Coverage / testing
+coverage/
+*.coverage
+*.lcov
+
+# Misc
+*.bak
+*.tmp
