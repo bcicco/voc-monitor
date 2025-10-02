@@ -3,7 +3,7 @@ from azure.storage.blob import BlobServiceClient
 from azure.data.tables import TableServiceClient
 
 # ---- constants  ----
-STORAGE_CONNECTION_STRING = os.environ.get("STORAGE_CONNECTION_STRING")
+STORAGE_CONNECTION_STRING = os.environ["STORAGE_CONNECTION_STRING"]
 BLOB_CONTAINER = os.environ.get("BLOB_CONTAINER")
 TABLE_NAME = os.environ.get("TABLE_NAME", "VocBreaths")
 FINALIZE_API_KEY = os.environ.get("FINALIZE_API_KEY", "")
