@@ -1,4 +1,3 @@
-// frontend/src/components/BreathList.tsx
 import { useEffect, useMemo, useState } from "react";
 
 export interface BreathSummary {

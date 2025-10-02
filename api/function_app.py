@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 
 
 load_dotenv()   # uncomment for local dev
-from api.blueprints.post_stage import stagesBP
+from blueprints.post_stage import stagesBP
 from blueprints.breaths_finalise import breathsFinalizeBP
 from blueprints.breath_list import breathsListBP
 from blueprints.breaths_get import breathsGetBP

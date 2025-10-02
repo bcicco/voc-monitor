@@ -10,7 +10,6 @@ export default function Home() {
   return (
     <main className="max-w-6xl mx-auto px-6 py-10 space-y-8">
       <h1 className="text-3xl font-bold">VOC Breath Data</h1>
-      <h2 className="text-2xl font-semibold">Staged Breaths</h2>
       {/* Inbox for staged breaths */}
       <StagedBreathList
         defaultDeviceId={deviceId}
