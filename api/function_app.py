@@ -2,7 +2,7 @@ import azure.functions as func
 from dotenv import load_dotenv
 
 
-load_dotenv()   # uncomment for local dev
+#load_dotenv()   # uncomment for local dev
 from blueprints.post_stage import stagesBP
 from blueprints.breaths_finalise import breathsFinalizeBP
 from blueprints.breath_list import breathsListBP
