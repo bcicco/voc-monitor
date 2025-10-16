@@ -14,6 +14,7 @@ export interface Breath {
   firmware?: string;
   meta?: Record<string, unknown>;
   samples: Sample[];
+  clinician_notes?: string;
 }
 
 export interface BreathSummary {
