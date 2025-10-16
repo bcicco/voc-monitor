@@ -34,6 +34,61 @@ export default function VocChart({ deviceId, breathId }: Props) {
 
   const samples: Sample[] = breath.samples ?? [];
 
+  function toCsvValue(v: unknown) {
+    if (v === null || v === undefined) return "";
+    const s = String(v);
+    // escape quotes and wrap if contains comma, quote, or newline
+    if (/[",\n]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
+    return s;
+  }
+
+  function buildCsv(b: Breath) {
+    const lines: string[] = [];
+    // Metadata section
+    const meta: Record<string, unknown> = {
+      device_id: b.device_id,
+      breath_id: b.breath_id,
+      started_at: b.started_at ?? "",
+      clinician_notes: b.clinician_notes ?? "",
+      sample_count: (b.samples ?? []).length,
+    };
+    lines.push("Metadata");
+    for (const [k, v] of Object.entries(meta)) {
+      lines.push(`${toCsvValue(k)},${toCsvValue(v)}`);
+    }
+    lines.push(""); // blank line
+
+    // Samples section
+    lines.push("Samples");
+    // choose columns present in  data; common keys:
+    const headers = [
+      "t_ms",
+      "voc1_ppb",
+      "voc2_ppb",
+    ];
+    lines.push(headers.map(toCsvValue).join(","));
+    for (const s of (b.samples ?? [])) {
+      const row = headers.map((h) => toCsvValue((s as any)[h]));
+      lines.push(row.join(","));
+    }
+    return lines.join("\n");
+  }
+
+  function downloadCsv() {
+    if (!breath) return;
+    const csv = buildCsv(breath);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const filename = `${breath.device_id || deviceId}__${breath.breath_id || breathId}.csv`;
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    URL.revokeObjectURL(url);
+    a.remove();
+  }
+
   return (
     <div className="p-6 rounded-2xl shadow bg-white space-y-4">
       {/* Header info */}
@@ -41,8 +96,17 @@ export default function VocChart({ deviceId, breathId }: Props) {
         <div>
           Device: <span className="font-mono">{breath.device_id}</span>
         </div>
-        <div>
-          Breath: <span className="font-mono">{breath.breath_id}</span>
+        <div className="flex items-center gap-3">
+          <div>
+            Breath: <span className="font-mono">{breath.breath_id}</span>
+          </div>
+          <button
+            onClick={downloadCsv}
+            className="px-3 py-1 rounded bg-black text-white text-xs"
+            title="Export as CSV"
+          >
+            Export CSV
+          </button>
         </div>
       </div>
 
@@ -62,20 +126,8 @@ export default function VocChart({ deviceId, breathId }: Props) {
           <YAxis yAxisId="voc" />
           <Tooltip />
           <Legend />
-          <Line
-            yAxisId="voc"
-            type="monotone"
-            dataKey="voc1_ppb"
-            stroke="#8884d8"
-            dot={false}
-          />
-          <Line
-            yAxisId="voc"
-            type="monotone"
-            dataKey="voc2_ppb"
-            stroke="#82ca9d"
-            dot={false}
-          />
+          <Line yAxisId="voc" type="monotone" dataKey="voc1_ppb" stroke="#8884d8" dot={false} />
+          <Line yAxisId="voc" type="monotone" dataKey="voc2_ppb" stroke="#82ca9d" dot={false} />
         </LineChart>
       </ResponsiveContainer>
     </div>
