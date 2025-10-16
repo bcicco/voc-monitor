@@ -4,15 +4,14 @@ from helpers.config import blob_service, table_client, BLOB_CONTAINER, FINALIZE_
 
 breathsFinalizeBP = func.Blueprint()
 
-@breathsFinalizeBP.route(route="breaths/{breath_id}", methods=["PUT"], auth_level=func.AuthLevel.FUNCTION)
+@breathsFinalizeBP.route(route="breaths/{breath_id}", methods=["PUT"], auth_level=func.AuthLevel.ANONYMOUS)
 def finalize_breath(req: func.HttpRequest) -> func.HttpResponse:
     """
     Clinician finalizes a staged breath, names it appropriately, and can add notes.
     Moves staging/{stage_id}.json -> {device_id}/{breath_id}.json
     Adds index row in Table Storage.
     """
-    if FINALIZE_API_KEY and req.headers.get("x-api-key") != FINALIZE_API_KEY:
-      return func.HttpResponse("Unauthorized", status_code=401)
+ 
 
     try:
         breath_id = req.route_params.get("breath_id")
