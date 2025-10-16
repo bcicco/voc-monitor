@@ -27,7 +27,8 @@ def list_breaths(req: func.HttpRequest) -> func.HttpResponse:
             "sample_count": r.get("sample_count"),
             "peak_voc1_ppb": r.get("peak_voc1_ppb"),
             "peak_voc2_ppb": r.get("peak_voc2_ppb"),
-            "duration_ms": r.get("duration_ms")
+            "duration_ms": r.get("duration_ms"),
+            "clinician_notes": r.get("clinician_notes"),  # NEW
         } for r in rows[:limit]]
 
         return func.HttpResponse(json.dumps(out), mimetype="application/json", status_code=200)

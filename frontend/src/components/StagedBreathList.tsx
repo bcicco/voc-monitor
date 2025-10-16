@@ -1,4 +1,3 @@
-
 import { useEffect, useMemo, useState } from "react";
 
 type StagedItem = {
@@ -11,8 +10,14 @@ type StagedItem = {
 };
 
 type Props = {
-  defaultDeviceId?: string; 
-  onFinalized?: (breathId: string) => void; 
+  defaultDeviceId?: string;
+  onFinalized?: (breathId: string) => void;
+};
+
+type FinalizeArgs = {
+  stage_id: string;
+  breath_id: string;
+  notes: string;
 };
 
 export default function StagedBreathList({
@@ -56,7 +61,7 @@ export default function StagedBreathList({
     );
   }, [items, filter]);
 
-  async function finalize(stage_id: string, breath_id: string) {
+  async function finalize({ stage_id, breath_id, notes }: FinalizeArgs) {
     if (!breath_id) {
       alert("Please enter a Breath ID");
       return;
@@ -68,7 +73,7 @@ export default function StagedBreathList({
           "Content-Type": "application/json",
           "x-api-key": "password",
         },
-        body: JSON.stringify({ stage_id, device_id: deviceId }),
+        body: JSON.stringify({ stage_id, device_id: deviceId, notes }),
       });
       if (!r.ok) throw new Error(await r.text());
       setItems((prev) => prev.filter((x) => x.stage_id !== stage_id));
@@ -116,7 +121,7 @@ export default function StagedBreathList({
               <th className="py-2 pr-4">Samples</th>
               <th className="py-2 pr-4">Last Modified</th>
               <th className="py-2 pr-4">Size</th>
-              <th className="py-2 pr-4">Breath ID</th>
+              <th className="py-2 pr-4">Breath ID + Notes</th>
               <th className="py-2 pr-2"></th>
             </tr>
           </thead>
@@ -135,7 +140,11 @@ export default function StagedBreathList({
               </tr>
             ) : (
               filtered.map((s) => (
-                <Row key={s.stage_id} item={s} onFinalize={finalize} />
+                <Row
+                  key={s.stage_id}
+                  item={s}
+                  onFinalize={(args) => finalize(args)}
+                />
               ))
             )}
           </tbody>
@@ -150,11 +159,13 @@ function Row({
   onFinalize,
 }: {
   item: StagedItem;
-  onFinalize: (stage_id: string, breath_id: string) => void;
+  onFinalize: (args: { stage_id: string; breath_id: string; notes: string }) => void;
 }) {
   const [breathId, setBreathId] = useState("");
+  const [notes, setNotes] = useState("");
+
   return (
-    <tr className="border-b">
+    <tr className="border-b align-top">
       <td className="py-2 pr-4 font-mono">{item.stage_id}</td>
       <td className="py-2 pr-4">
         {item.started_at ? new Date(item.started_at).toLocaleString() : "—"}
@@ -167,18 +178,30 @@ function Row({
       </td>
       <td className="py-2 pr-4">{formatBytes(item.size)}</td>
       <td className="py-2 pr-4">
-        <input
-          value={breathId}
-          onChange={(e) => setBreathId(e.target.value)}
-          placeholder="e.g. trial-001"
-          className="border rounded px-2 py-1 text-sm font-mono"
-          style={{ width: 180 }}
-        />
+        <div className="flex flex-col gap-2">
+          <input
+            value={breathId}
+            onChange={(e) => setBreathId(e.target.value)}
+            placeholder="e.g. trial-001"
+            className="border rounded px-2 py-1 text-sm font-mono"
+            style={{ width: 200 }}
+          />
+          <textarea
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder="Clinician notes (optional)"
+            className="border rounded px-2 py-1 text-sm"
+            rows={3}
+            style={{ width: 320 }}
+          />
+        </div>
       </td>
       <td className="py-2 pr-2">
         <button
           className="px-3 py-1 rounded bg-black text-white"
-          onClick={() => onFinalize(item.stage_id, breathId)}
+          onClick={() =>
+            onFinalize({ stage_id: item.stage_id, breath_id: breathId, notes })
+          }
         >
           Finalize
         </button>
