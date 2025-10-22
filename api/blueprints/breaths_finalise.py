@@ -4,14 +4,16 @@ from helpers.config import blob_service, table_client, BLOB_CONTAINER, FINALIZE_
 
 breathsFinalizeBP = func.Blueprint()
 
-@breathsFinalizeBP.route(route="breaths/{breath_id}", methods=["PUT"], auth_level=func.AuthLevel.ANONYMOUS)
+
+@breathsFinalizeBP.route(
+    route="breaths/{breath_id}", methods=["PUT"], auth_level=func.AuthLevel.ANONYMOUS
+)
 def finalize_breath(req: func.HttpRequest) -> func.HttpResponse:
     """
     Clinician finalizes a staged breath, names it appropriately, and can add notes.
     Moves staging/{stage_id}.json -> {device_id}/{breath_id}.json
     Adds index row in Table Storage.
     """
- 
 
     try:
         breath_id = req.route_params.get("breath_id")
@@ -20,7 +22,9 @@ def finalize_breath(req: func.HttpRequest) -> func.HttpResponse:
         notes = (body.get("notes") or "").strip()
 
         if not (breath_id and stage_id and device_id):
-            return func.HttpResponse("stage_id, device_id, breath_id required", status_code=400)
+            return func.HttpResponse(
+                "stage_id, device_id, breath_id required", status_code=400
+            )
 
         bs = blob_service()
 
@@ -50,8 +54,8 @@ def finalize_breath(req: func.HttpRequest) -> func.HttpResponse:
 
         # compute index fields
         samples = data.get("samples", []) or []
-        peak_v1 = max((s.get("voc1_ppb", float("-inf")) for s in samples), default=None)
-        peak_v2 = max((s.get("voc2_ppb", float("-inf")) for s in samples), default=None)
+        peak_v1 = max((s.get("voc1", float("-inf")) for s in samples), default=None)
+        peak_v2 = max((s.get("voc2", float("-inf")) for s in samples), default=None)
         duration_ms = samples[-1]["t_ms"] if samples and "t_ms" in samples[-1] else None
 
         # upsert index with optional notes
@@ -61,8 +65,8 @@ def finalize_breath(req: func.HttpRequest) -> func.HttpResponse:
             "RowKey": breath_id,
             "started_at": data.get("started_at"),
             "sample_count": len(samples),
-            "peak_voc1_ppb": peak_v1,
-            "peak_voc2_ppb": peak_v2,
+            "peak_voc1": peak_v1,
+            "peak_voc2": peak_v2,
             "duration_ms": duration_ms,
         }
         if notes:
@@ -70,7 +74,9 @@ def finalize_breath(req: func.HttpRequest) -> func.HttpResponse:
 
         tbl.upsert_entity(entity)
 
-        return func.HttpResponse(json.dumps({"ok": True}), mimetype="application/json", status_code=201)
+        return func.HttpResponse(
+            json.dumps({"ok": True}), mimetype="application/json", status_code=201
+        )
 
     except Exception as e:
         return func.HttpResponse(f"Bad Request: {e}", status_code=400)
