@@ -142,21 +142,21 @@ export default function VocChart({ deviceId, breathId }: Props) {
           <Line
             yAxisId="Gas Concentration (ppb)"
             type="monotone"
-            dataKey="voc1_ppb"
+            dataKey="voc1"
             stroke="#8884d8"
             dot={false}
           />
           <Line
             yAxisId="Gas Concentration (ppb)"
             type="monotone"
-            dataKey="voc2_ppb"
+            dataKey="voc2"
             stroke="#82ca9d"
             dot={false}
           />
           <Line
             yAxisId="Gas Concentration (ppb)"
             type="monotone"
-            dataKey="co2_ppb"
+            dataKey="co2_ppm"
             stroke="#ff7300"
             dot={false}
           />
