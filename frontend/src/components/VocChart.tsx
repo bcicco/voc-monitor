@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import type { Breath, Sample } from "../types";
 import {
-  LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Legend
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  ResponsiveContainer,
+  Legend,
 } from "recharts";
 
 type Props = { deviceId: string; breathId: string };
@@ -15,7 +22,9 @@ export default function VocChart({ deviceId, breathId }: Props) {
     (async () => {
       try {
         const res = await fetch(
-          `/api/breaths/${encodeURIComponent(breathId)}?device_id=${encodeURIComponent(deviceId)}`
+          `/api/breaths/${encodeURIComponent(
+            breathId
+          )}?device_id=${encodeURIComponent(deviceId)}`
         );
         if (!res.ok) throw new Error(await res.text());
         const b = (await res.json()) as Breath;
@@ -24,13 +33,19 @@ export default function VocChart({ deviceId, breathId }: Props) {
         if (!cancel) setErr(e?.message ?? String(e));
       }
     })();
-    return () => { cancel = true; };
+    return () => {
+      cancel = true;
+    };
   }, [deviceId, breathId]);
 
   if (err)
-    return <div className="p-3 rounded bg-red-50 text-red-700 text-sm">{err}</div>;
+    return (
+      <div className="p-3 rounded bg-red-50 text-red-700 text-sm">{err}</div>
+    );
   if (!breath)
-    return <div className="p-3 rounded bg-white text-gray-600 text-sm">Loading…</div>;
+    return (
+      <div className="p-3 rounded bg-white text-gray-600 text-sm">Loading…</div>
+    );
 
   const samples: Sample[] = breath.samples ?? [];
 
@@ -61,13 +76,9 @@ export default function VocChart({ deviceId, breathId }: Props) {
     // Samples section
     lines.push("Samples");
     // choose columns present in  data; common keys:
-    const headers = [
-      "t_ms",
-      "voc1_ppb",
-      "voc2_ppb",
-    ];
+    const headers = ["t_ms", "voc1_ppb", "voc2_ppb", "co2_ppb"];
     lines.push(headers.map(toCsvValue).join(","));
-    for (const s of (b.samples ?? [])) {
+    for (const s of b.samples ?? []) {
       const row = headers.map((h) => toCsvValue((s as any)[h]));
       lines.push(row.join(","));
     }
@@ -79,7 +90,9 @@ export default function VocChart({ deviceId, breathId }: Props) {
     const csv = buildCsv(breath);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
-    const filename = `${breath.device_id || deviceId}__${breath.breath_id || breathId}.csv`;
+    const filename = `${breath.device_id || deviceId}__${
+      breath.breath_id || breathId
+    }.csv`;
     const a = document.createElement("a");
     a.href = url;
     a.download = filename;
@@ -126,8 +139,27 @@ export default function VocChart({ deviceId, breathId }: Props) {
           <YAxis yAxisId="voc" />
           <Tooltip />
           <Legend />
-          <Line yAxisId="voc" type="monotone" dataKey="voc1_ppb" stroke="#8884d8" dot={false} />
-          <Line yAxisId="voc" type="monotone" dataKey="voc2_ppb" stroke="#82ca9d" dot={false} />
+          <Line
+            yAxisId="Gas Concentration (ppb)"
+            type="monotone"
+            dataKey="voc1_ppb"
+            stroke="#8884d8"
+            dot={false}
+          />
+          <Line
+            yAxisId="Gas Concentration (ppb)"
+            type="monotone"
+            dataKey="voc2_ppb"
+            stroke="#82ca9d"
+            dot={false}
+          />
+          <Line
+            yAxisId="Gas Concentration (ppb)"
+            type="monotone"
+            dataKey="co2_ppb"
+            stroke="#ff7300"
+            dot={false}
+          />
         </LineChart>
       </ResponsiveContainer>
     </div>
