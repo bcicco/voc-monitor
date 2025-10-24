@@ -29,8 +29,8 @@ def list_breaths(req: func.HttpRequest) -> func.HttpResponse:
                 "breath_id": r["RowKey"],
                 "started_at": r.get("started_at"),
                 "sample_count": r.get("sample_count"),
-                "peak_voc1": r.get("peak_voc1_ppb"),
-                "peak_voc2": r.get("peak_voc2_ppb"),
+                "peak_voc1": r.get("peak_voc1"),
+                "peak_voc2": r.get("peak_voc2"),
                 "duration_ms": r.get("duration_ms"),
                 "clinician_notes": r.get("clinician_notes"),  # NEW
             }
