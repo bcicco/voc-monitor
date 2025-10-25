@@ -5,8 +5,8 @@ export interface BreathSummary {
   breath_id: string;
   started_at: string | null;
   sample_count: number;
-  peak_voc1_ppb?: number | null;
-  peak_voc2_ppb?: number | null;
+  peak_voc1?: number | null;
+  peak_voc2?: number | null;
   duration_ms?: number | null;
 }
 
@@ -27,7 +27,9 @@ export default function BreathList({ deviceId, onSelect }: Props) {
       setLoading(true);
       setErr(null);
       try {
-        const res = await fetch(`/api/breaths?device_id=${encodeURIComponent(deviceId)}`);
+        const res = await fetch(
+          `/api/breaths?device_id=${encodeURIComponent(deviceId)}`
+        );
         if (!res.ok) throw new Error(await res.text());
         const data = (await res.json()) as BreathSummary[];
         if (!cancel) setRows(data);
@@ -38,13 +40,15 @@ export default function BreathList({ deviceId, onSelect }: Props) {
       }
     }
     load();
-    return () => { cancel = true; };
+    return () => {
+      cancel = true;
+    };
   }, [deviceId]);
 
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
     if (!term) return rows;
-    return rows.filter(r => r.breath_id.toLowerCase().includes(term));
+    return rows.filter((r) => r.breath_id.toLowerCase().includes(term));
   }, [rows, q]);
 
   return (
@@ -68,7 +72,9 @@ export default function BreathList({ deviceId, onSelect }: Props) {
       </div>
 
       {err && (
-        <div className="mb-3 p-3 rounded bg-red-50 text-red-700 text-sm">{err}</div>
+        <div className="mb-3 p-3 rounded bg-red-50 text-red-700 text-sm">
+          {err}
+        </div>
       )}
 
       <div className="overflow-x-auto">
@@ -87,22 +93,28 @@ export default function BreathList({ deviceId, onSelect }: Props) {
           <tbody>
             {loading && rows.length === 0 ? (
               <tr>
-                <td colSpan={7} className="py-6 text-center text-gray-500">Loading…</td>
+                <td colSpan={7} className="py-6 text-center text-gray-500">
+                  Loading…
+                </td>
               </tr>
             ) : filtered.length === 0 ? (
               <tr>
-                <td colSpan={7} className="py-6 text-center text-gray-500">No breaths</td>
+                <td colSpan={7} className="py-6 text-center text-gray-500">
+                  No breaths
+                </td>
               </tr>
             ) : (
               filtered.map((r) => (
                 <tr key={r.breath_id} className="border-b hover:bg-gray-50">
                   <td className="py-2 pr-4 font-mono">{r.breath_id}</td>
                   <td className="py-2 pr-4">
-                    {r.started_at ? new Date(r.started_at).toLocaleString() : "—"}
+                    {r.started_at
+                      ? new Date(r.started_at).toLocaleString()
+                      : "—"}
                   </td>
                   <td className="py-2 pr-4">{r.sample_count ?? "—"}</td>
-                  <td className="py-2 pr-4">{valueOrDash(r.peak_voc1_ppb)}</td>
-                  <td className="py-2 pr-4">{valueOrDash(r.peak_voc2_ppb)}</td>
+                  <td className="py-2 pr-4">{valueOrDash(r.peak_voc1)}</td>
+                  <td className="py-2 pr-4">{valueOrDash(r.peak_voc2)}</td>
                   <td className="py-2 pr-4">{msOrDash(r.duration_ms)}</td>
                   <td className="py-2 pr-2">
                     <button
