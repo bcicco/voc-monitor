@@ -136,25 +136,25 @@ export default function VocChart({ deviceId, breathId }: Props) {
         <LineChart data={samples}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="t_ms" />
-          <YAxis yAxisId="voc" domain={[1000, 1800]} />
+          <YAxis yAxisId="voc" domain={[450, 2000]} />
           <Tooltip />
           <Legend />
           <Line
-            yAxisId="Gas Concentration (ppb)"
+            yAxisId="voc"
             type="monotone"
             dataKey="voc1"
             stroke="#8884d8"
             dot={false}
           />
           <Line
-            yAxisId="Gas Concentration (ppb)"
+            yAxisId="voc"
             type="monotone"
             dataKey="voc2"
             stroke="#82ca9d"
             dot={false}
           />
           <Line
-            yAxisId="Gas Concentration (ppb)"
+            yAxisId="voc"
             type="monotone"
             dataKey="co2_ppm"
             stroke="#ff7300"
