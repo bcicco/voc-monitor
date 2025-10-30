@@ -145,7 +145,7 @@ export default function VocChart({ deviceId, breathId }: Props) {
             dataKey="voc1"
             stroke="#8884d8"
             strokeDasharray="4 4"
-            dot={{ r: 3 }}
+            dot={{ r: 3, fill: "#8884d8", stroke: "none" }}
           />
           <Line
             yAxisId="voc"
@@ -153,7 +153,7 @@ export default function VocChart({ deviceId, breathId }: Props) {
             dataKey="voc2"
             stroke="#82ca9d"
             strokeDasharray="4 4"
-            dot={{ r: 3 }}
+            dot={{ r: 3, fill: "#8884d8", stroke: "none" }}
           />
           <Line
             yAxisId="voc"
@@ -161,7 +161,7 @@ export default function VocChart({ deviceId, breathId }: Props) {
             dataKey="co2_ppm"
             stroke="#ff7300"
             strokeDasharray="4 4"
-            dot={{ r: 3 }}
+            dot={{ r: 3, fill: "#8884d8", stroke: "none" }}
           />
         </LineChart>
       </ResponsiveContainer>
