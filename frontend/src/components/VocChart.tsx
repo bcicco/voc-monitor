@@ -144,21 +144,21 @@ export default function VocChart({ deviceId, breathId }: Props) {
             type="monotone"
             dataKey="voc1"
             stroke="#8884d8"
-            dot={false}
+            dot={{ r: 3 }}
           />
           <Line
             yAxisId="voc"
             type="monotone"
             dataKey="voc2"
             stroke="#82ca9d"
-            dot={false}
+            dot={{ r: 3 }}
           />
           <Line
             yAxisId="voc"
             type="monotone"
             dataKey="co2_ppm"
             stroke="#ff7300"
-            dot={false}
+            dot={{ r: 3 }}
           />
         </LineChart>
       </ResponsiveContainer>
