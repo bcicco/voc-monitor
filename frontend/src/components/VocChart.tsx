@@ -136,7 +136,7 @@ export default function VocChart({ deviceId, breathId }: Props) {
         <LineChart data={samples}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="t_ms" />
-          <YAxis yAxisId="voc" />
+          <YAxis yAxisId="voc" domain={[1000, 1800]} />
           <Tooltip />
           <Legend />
           <Line
